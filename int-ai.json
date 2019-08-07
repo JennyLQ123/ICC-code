@@ -1,0 +1,2548 @@
+{
+  "program" : "int-ai.p4",
+  "__meta__" : {
+    "version" : [2, 7],
+    "compiler" : "https://github.com/p4lang/p4c"
+  },
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["tmp", 32, false],
+        ["tmp_0", 32, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 1,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "flow_t",
+      "id" : 2,
+      "fields" : [
+        ["count", 8, false],
+        ["routeid", 16, false],
+        ["protocol", 8, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["flagOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "tcp_t",
+      "id" : 4,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["seqNo", 32, false],
+        ["ackNo", 32, false],
+        ["dataOffset", 4, false],
+        ["res", 4, false],
+        ["flags", 8, false],
+        ["window", 16, false],
+        ["checksum", 16, false],
+        ["urgentPtr", 16, false]
+      ]
+    },
+    {
+      "name" : "udp_t",
+      "id" : 5,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["length", 16, false],
+        ["checksum", 16, false]
+      ]
+    },
+    {
+      "name" : "int_t",
+      "id" : 6,
+      "fields" : [
+        ["swid", 8, false],
+        ["qtimedelta", 32, false],
+        ["qdepth", 16, false]
+      ]
+    },
+    {
+      "name" : "intrinsic_metadata_t",
+      "id" : 7,
+      "fields" : [
+        ["ingress_global_timestamp", 48, false],
+        ["egress_global_timestamp", 48, false],
+        ["lf_field_list", 8, false],
+        ["mcast_grp", 16, false],
+        ["egress_rid", 16, false],
+        ["resubmit_flag", 8, false],
+        ["recirculate_flag", 8, false]
+      ]
+    },
+    {
+      "name" : "custom_metadata_t",
+      "id" : 8,
+      "fields" : [
+        ["parse_int_counter", 8, false],
+        ["routeid", 16, false],
+        ["dstAddr", 32, false],
+        ["register_tmp", 32, false],
+        ["tcpLength", 16, false],
+        ["udpLength", 16, false]
+      ]
+    },
+    {
+      "name" : "queueing_metadata_t",
+      "id" : 9,
+      "fields" : [
+        ["enq_timestamp", 48, false],
+        ["enq_qdepth", 16, false],
+        ["deq_timedelta", 32, false],
+        ["deq_qdepth", 16, false],
+        ["qid", 8, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 10,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["clone_spec", 32, false],
+        ["instance_type", 32, false],
+        ["drop", 1, false],
+        ["recirculate_port", 16, false],
+        ["packet_length", 32, false],
+        ["checksum_error", 1, false],
+        ["_padding", 3, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "flow_header",
+      "id" : 3,
+      "header_type" : "flow_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 4,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "tcp",
+      "id" : 5,
+      "header_type" : "tcp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "udp",
+      "id" : 6,
+      "header_type" : "udp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[0]",
+      "id" : 7,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[1]",
+      "id" : 8,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[2]",
+      "id" : 9,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[3]",
+      "id" : 10,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[4]",
+      "id" : 11,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[5]",
+      "id" : 12,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[6]",
+      "id" : 13,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[7]",
+      "id" : 14,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[8]",
+      "id" : 15,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "int[9]",
+      "id" : 16,
+      "header_type" : "int_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "intrinsic_metadata",
+      "id" : 17,
+      "header_type" : "intrinsic_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "meta",
+      "id" : 18,
+      "header_type" : "custom_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "queueing_metadata",
+      "id" : 19,
+      "header_type" : "queueing_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [
+    {
+      "name" : "int",
+      "id" : 0,
+      "header_type" : "int_t",
+      "size" : 10,
+      "header_ids" : [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    }
+  ],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [
+    {
+      "id" : 1,
+      "name" : "fl",
+      "elements" : [
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp"]
+        }
+      ]
+    }
+  ],
+  "errors" : [
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "parse_ethernet",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_no_flow_header"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0801",
+              "mask" : null,
+              "next_state" : "parse_flow_header"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_flow_header",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "flow_header"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "routeid"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["flow_header", "routeid"]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "parse_int_counter"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["flow_header", "count"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x01",
+              "mask" : null,
+              "next_state" : "parse_int"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["flow_header", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_int",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "stack",
+                  "value" : "int"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "parse_int_counter"]
+                },
+                {
+                  "type" : "expression",
+                  "value" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "+",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["meta", "parse_int_counter"]
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  }
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x00",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_int"
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "parse_int_counter"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "tcpLength"]
+                },
+                {
+                  "type" : "expression",
+                  "value" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "+",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["ipv4", "totalLen"]
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffec"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xffff"
+                      }
+                    }
+                  }
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x11",
+              "mask" : null,
+              "next_state" : "parse_udp"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06",
+              "mask" : null,
+              "next_state" : "parse_tcp"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_no_flow_header",
+          "id" : 4,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "routeid"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x0000"
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_tcp",
+          "id" : 5,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "tcp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_udp",
+          "id" : 6,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "udp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "start",
+          "id" : 7,
+          "parser_ops" : [],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ethernet"
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "order" : ["ethernet", "flow_header", "int[0]", "int[1]", "int[2]", "int[3]", "int[4]", "int[5]", "int[6]", "int[7]", "int[8]", "int[9]", "ipv4", "tcp", "udp"]
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [
+    {
+      "name" : "my_counter",
+      "id" : 0,
+      "size" : 10,
+      "is_direct" : false
+    }
+  ],
+  "register_arrays" : [
+    {
+      "name" : "my_register",
+      "id" : 0,
+      "size" : 1,
+      "bitwidth" : 32
+    }
+  ],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flagOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_0",
+      "id" : 1,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "hexstr",
+          "value" : "0x00",
+          "bitwidth" : 8
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["meta", "tcpLength"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "srcPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "dstPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "seqNo"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "ackNo"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "dataOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "res"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "window"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "urgentPtr"]
+        },
+        {
+          "type" : "payload",
+          "value" : null
+        }
+      ]
+    },
+    {
+      "name" : "calc_1",
+      "id" : 2,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "hexstr",
+          "value" : "0x00",
+          "bitwidth" : 8
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["meta", "tcpLength"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "srcPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "dstPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "length"]
+        },
+        {
+          "type" : "payload",
+          "value" : null
+        }
+      ]
+    },
+    {
+      "name" : "calc_2",
+      "id" : 3,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flagOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_3",
+      "id" : 4,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "hexstr",
+          "value" : "0x00",
+          "bitwidth" : 8
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["meta", "tcpLength"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "srcPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "dstPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "seqNo"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "ackNo"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "dataOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "res"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "window"]
+        },
+        {
+          "type" : "field",
+          "value" : ["tcp", "urgentPtr"]
+        },
+        {
+          "type" : "payload",
+          "value" : null
+        }
+      ]
+    },
+    {
+      "name" : "calc_4",
+      "id" : 5,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "hexstr",
+          "value" : "0x00",
+          "bitwidth" : 8
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["meta", "tcpLength"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "srcPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "dstPort"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "length"]
+        },
+        {
+          "type" : "payload",
+          "value" : null
+        }
+      ]
+    }
+  ],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "ad_e_int",
+      "id" : 3,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "push",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "int"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 423,
+            "column" : 1,
+            "source_fragment" : "push(int,1)"
+          }
+        },
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "int[0]"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 423,
+            "column" : 1,
+            "source_fragment" : "push(int,1)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "swid"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 422,
+            "column" : 16,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["flow_header", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["flow_header", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 425,
+            "column" : 1,
+            "source_fragment" : "add_to_field(flow_header.count,+1)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "qtimedelta"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 426,
+            "column" : 1,
+            "source_fragment" : "modify_field(int[0].qtimedelta,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "qdepth"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_qdepth"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 427,
+            "column" : 1,
+            "source_fragment" : "modify_field(int[0].qdepth,queueing_metadata.deq_qdepth)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "rmv_header",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "flow_header"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 437,
+            "column" : 1,
+            "source_fragment" : "remove_header(flow_header)"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "int"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0xa"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 438,
+            "column" : 1,
+            "source_fragment" : "pop(int,10)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "updt_flg",
+      "id" : 5,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0801"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 396,
+            "column" : 2,
+            "source_fragment" : "modify_field(ethernet.etherType,0x0801)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "NoAction",
+      "id" : 6,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 7,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 8,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 9,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 10,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "ad_f_int",
+      "id" : 11,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "int[0]"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 414,
+            "column" : 1,
+            "source_fragment" : "add_header(int[0])"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["flow_header", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["flow_header", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 415,
+            "column" : 1,
+            "source_fragment" : "add_to_field(flow_header.count,+1)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "swid"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 413,
+            "column" : 16,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["flow_header", "protocol"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 417,
+            "column" : 2,
+            "source_fragment" : "modify_field(flow_header.protocol,0x01)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "qtimedelta"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 418,
+            "column" : 1,
+            "source_fragment" : "modify_field(int[0].qtimedelta,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["int[0]", "qdepth"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_qdepth"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 419,
+            "column" : 1,
+            "source_fragment" : "modify_field(int[0].qdepth,queueing_metadata.deq_qdepth)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "checkregister",
+      "id" : 12,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "register_tmp"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "my_register"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 347,
+            "column" : 4,
+            "source_fragment" : "register_read(meta.register_tmp,my_register,0)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "register_tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "-",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["intrinsic_metadata", "ingress_global_timestamp"]
+                          },
+                          "right" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "&",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["meta", "register_tmp"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xffffffffffff"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xffffffffffff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 348,
+            "column" : 4,
+            "source_fragment" : "modify_field(meta.register_tmp,intrinsic_metadata.ingress_global_timestamp-meta.register_tmp)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "c2c",
+      "id" : 13,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "dstAddr"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "dstAddr"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 358,
+            "column" : 4,
+            "source_fragment" : "modify_field(meta.dstAddr,ethernet.dstAddr)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "dstAddr"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "op" : "clone_ingress_pkt_to_egress",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x00000001"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ]
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["intrinsic_metadata", "ingress_global_timestamp"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "my_register"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 360,
+            "column" : 4,
+            "source_fragment" : "register_write(my_register,0,intrinsic_metadata.ingress_global_timestamp)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "set_routeid",
+      "id" : 14,
+      "runtime_data" : [
+        {
+          "name" : "routeid",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "flow_header"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 257,
+            "column" : 4,
+            "source_fragment" : "add_header(flow_header)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["flow_header", "routeid"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 256,
+            "column" : 19,
+            "source_fragment" : "routeid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0801"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 259,
+            "column" : 4,
+            "source_fragment" : "modify_field(ethernet.etherType,0x0801)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "my_drop",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 303,
+            "column" : 4,
+            "source_fragment" : "drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "my_drop",
+      "id" : 16,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 303,
+            "column" : 4,
+            "source_fragment" : "drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "ipv4_fwd",
+      "id" : 17,
+      "runtime_data" : [
+        {
+          "name" : "port",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "local",
+                    "value" : 0
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 317,
+            "column" : 16,
+            "source_fragment" : "port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 319,
+            "column" : 4,
+            "source_fragment" : "modify_field(ipv4.ttl,ipv4.ttl-1)"
+          }
+        },
+        {
+          "op" : "count",
+          "parameters" : [
+            {
+              "type" : "counter_array",
+              "value" : "my_counter"
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 320,
+            "column" : 4,
+            "source_fragment" : "count(my_counter,port)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "fwd2host",
+      "id" : 18,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 323,
+            "column" : 24,
+            "source_fragment" : "port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 323,
+            "column" : 16,
+            "source_fragment" : "dstAddr,port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0800"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 326,
+            "column" : 4,
+            "source_fragment" : "modify_field(ethernet.etherType,0x0800)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 327,
+            "column" : 4,
+            "source_fragment" : "modify_field(ipv4.ttl,ipv4.ttl-1)"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "init_table" : "node_2",
+      "tables" : [
+        {
+          "name" : "create_flow_header",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 262,
+            "column" : 0,
+            "source_fragment" : "table create_flow_header{ ..."
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "indirect_ws",
+          "action_profile" : "set_routeid_profile",
+          "max_size" : 100,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [14, 15, 9],
+          "actions" : ["set_routeid", "my_drop", "NoAction"],
+          "base_default_next" : "check_register",
+          "next_tables" : {
+            "set_routeid" : "check_register",
+            "my_drop" : "check_register",
+            "NoAction" : "check_register"
+          }
+        },
+        {
+          "name" : "check_register",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 340,
+            "column" : 0,
+            "source_fragment" : "table check_register{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [12, 7],
+          "actions" : ["checkregister", "NoAction"],
+          "base_default_next" : "node_5",
+          "next_tables" : {
+            "checkregister" : "node_5",
+            "NoAction" : "node_5"
+          },
+          "default_entry" : {
+            "action_id" : 7,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "add_first_int",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 399,
+            "column" : 0,
+            "source_fragment" : "table add_first_int{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [11, 6],
+          "actions" : ["ad_f_int", "NoAction"],
+          "base_default_next" : "routeid_fwd",
+          "next_tables" : {
+            "ad_f_int" : "routeid_fwd",
+            "NoAction" : "routeid_fwd"
+          },
+          "default_entry" : {
+            "action_id" : 6,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "routeid_fwd",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 306,
+            "column" : 0,
+            "source_fragment" : "table routeid_fwd{ ..."
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "flow_header.routeid",
+              "target" : ["flow_header", "routeid"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [17, 18, 16, 10],
+          "actions" : ["ipv4_fwd", "fwd2host", "my_drop", "NoAction"],
+          "base_default_next" : "node_8",
+          "next_tables" : {
+            "ipv4_fwd" : "node_8",
+            "fwd2host" : "node_8",
+            "my_drop" : "node_8",
+            "NoAction" : "node_8"
+          },
+          "default_entry" : {
+            "action_id" : 10,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "clone_to_controller",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 351,
+            "column" : 0,
+            "source_fragment" : "table clone_to_controller{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [13, 8],
+          "actions" : ["c2c", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "c2c" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 8,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [
+        {
+          "name" : "set_routeid_profile",
+          "id" : 0,
+          "max_size" : 5,
+          "selector" : {
+            "algo" : "crc16",
+            "input" : [
+              {
+                "type" : "field",
+                "value" : ["ipv4", "srcAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "dstAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "protocol"]
+              }
+            ]
+          }
+        }
+      ],
+      "conditionals" : [
+        {
+          "name" : "node_2",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 365,
+            "column" : 16,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["meta", "routeid"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x0000"
+              }
+            }
+          },
+          "true_next" : "create_flow_header",
+          "false_next" : "routeid_fwd"
+        },
+        {
+          "name" : "node_5",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 368,
+            "column" : 30,
+            "source_fragment" : ">="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : ">=",
+              "left" : {
+                "type" : "field",
+                "value" : ["meta", "register_tmp"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x000f4240"
+              }
+            }
+          },
+          "true_next" : "add_first_int",
+          "false_next" : "routeid_fwd"
+        },
+        {
+          "name" : "node_8",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 373,
+            "column" : 34,
+            "source_fragment" : "and"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "and",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "etherType"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x0800"
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["flow_header", "protocol"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01"
+                  }
+                }
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "clone_to_controller"
+        }
+      ]
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "init_table" : "node_12",
+      "tables" : [
+        {
+          "name" : "add_else_int",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 406,
+            "column" : 0,
+            "source_fragment" : "table add_else_int{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [3, 0],
+          "actions" : ["ad_e_int", "NoAction"],
+          "base_default_next" : "node_14",
+          "next_tables" : {
+            "ad_e_int" : "node_14",
+            "NoAction" : "node_14"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "remove_additional_header",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 430,
+            "column" : 0,
+            "source_fragment" : "table remove_additional_header{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [4, 1],
+          "actions" : ["rmv_header", "NoAction"],
+          "base_default_next" : "node_16",
+          "next_tables" : {
+            "rmv_header" : "node_16",
+            "NoAction" : "node_16"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "update_clone_flag",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 388,
+            "column" : 0,
+            "source_fragment" : "table update_clone_flag{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [5, 2],
+          "actions" : ["updt_flg", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "updt_flg" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_12",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 379,
+            "column" : 25,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["flow_header", "protocol"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x01"
+              }
+            }
+          },
+          "true_next" : "add_else_int",
+          "false_next" : "node_14"
+        },
+        {
+          "name" : "node_14",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 382,
+            "column" : 41,
+            "source_fragment" : "&&"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "and",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "instance_type"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x00000000"
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "etherType"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x0800"
+                  }
+                }
+              }
+            }
+          },
+          "true_next" : "remove_additional_header",
+          "false_next" : "node_16"
+        },
+        {
+          "name" : "node_16",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 385,
+            "column" : 36,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["standard_metadata", "instance_type"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000002"
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "update_clone_flag"
+        }
+      ]
+    }
+  ],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc",
+      "if_cond" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "name" : "cksum_0",
+      "id" : 1,
+      "target" : ["tcp", "checksum"],
+      "type" : "generic",
+      "calculation" : "calc_0",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["tcp", "$valid$"]
+          }
+        }
+      }
+    },
+    {
+      "name" : "cksum_1",
+      "id" : 2,
+      "target" : ["udp", "checksum"],
+      "type" : "generic",
+      "calculation" : "calc_1",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["udp", "$valid$"]
+          }
+        }
+      }
+    },
+    {
+      "name" : "cksum_2",
+      "id" : 3,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc_2",
+      "if_cond" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "name" : "cksum_3",
+      "id" : 4,
+      "target" : ["tcp", "checksum"],
+      "type" : "generic",
+      "calculation" : "calc_3",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["tcp", "$valid$"]
+          }
+        }
+      }
+    },
+    {
+      "name" : "cksum_4",
+      "id" : 5,
+      "target" : ["udp", "checksum"],
+      "type" : "generic",
+      "calculation" : "calc_4",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["udp", "$valid$"]
+          }
+        }
+      }
+    }
+  ],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : []
+}

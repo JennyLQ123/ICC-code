@@ -1,0 +1,2460 @@
+{
+  "program" : "int-ai.p4",
+  "__meta__" : {
+    "version" : [2, 7],
+    "compiler" : "https://github.com/p4lang/p4c"
+  },
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["tmp", 32, false],
+        ["tmp_0", 32, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 1,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 2,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["flagOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "mri_t",
+      "id" : 3,
+      "fields" : [
+        ["count", 8, false],
+        ["routeid", 16, false],
+        ["swid1", 8, false],
+        ["qtimedelta1", 32, false],
+        ["deqlen1", 32, false],
+        ["swid2", 8, false],
+        ["qtimedelta2", 32, false],
+        ["deqlen2", 32, false],
+        ["swid3", 8, false],
+        ["qtimedelta3", 32, false],
+        ["deqlen3", 32, false],
+        ["swid4", 8, false],
+        ["qtimedelta4", 32, false],
+        ["deqlen4", 32, false],
+        ["swid5", 8, false],
+        ["qtimedelta5", 32, false],
+        ["deqlen5", 32, false]
+      ]
+    },
+    {
+      "name" : "intrinsic_metadata_t",
+      "id" : 4,
+      "fields" : [
+        ["ingress_global_timestamp", 48, false],
+        ["lf_field_list", 8, false],
+        ["mcast_grp", 16, false],
+        ["egress_rid", 16, false],
+        ["resubmit_flag", 8, false],
+        ["recirculate_flag", 8, false]
+      ]
+    },
+    {
+      "name" : "custom_metadata_t",
+      "id" : 5,
+      "fields" : [
+        ["count", 8, false],
+        ["routeid", 16, false],
+        ["dstAddr", 32, false],
+        ["register_tmp", 32, false]
+      ]
+    },
+    {
+      "name" : "queueing_metadata_t",
+      "id" : 6,
+      "fields" : [
+        ["enq_timestamp", 48, false],
+        ["enq_qdepth", 16, false],
+        ["deq_timedelta", 32, false],
+        ["deq_qdepth", 16, false],
+        ["qid", 8, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 7,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["clone_spec", 32, false],
+        ["instance_type", 32, false],
+        ["drop", 1, false],
+        ["recirculate_port", 16, false],
+        ["packet_length", 32, false],
+        ["checksum_error", 1, false],
+        ["_padding", 3, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 3,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "mri",
+      "id" : 4,
+      "header_type" : "mri_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "intrinsic_metadata",
+      "id" : 5,
+      "header_type" : "intrinsic_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "meta",
+      "id" : 6,
+      "header_type" : "custom_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "queueing_metadata",
+      "id" : 7,
+      "header_type" : "queueing_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [
+    {
+      "id" : 1,
+      "name" : "fl",
+      "elements" : [
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp"]
+        }
+      ]
+    }
+  ],
+  "errors" : [
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "no_mri",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "routeid"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x0000"
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_ethernet",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "no_mri"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_mri"
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_mri",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "mri"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["meta", "routeid"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x0001"
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "start",
+          "id" : 4,
+          "parser_ops" : [],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ethernet"
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "order" : ["ethernet", "mri", "ipv4"]
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [
+    {
+      "name" : "my_counter",
+      "id" : 0,
+      "size" : 1,
+      "is_direct" : false
+    }
+  ],
+  "register_arrays" : [
+    {
+      "name" : "my_register",
+      "id" : 0,
+      "size" : 1,
+      "bitwidth" : 32
+    }
+  ],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flagOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_0",
+      "id" : 1,
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flagOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    }
+  ],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 5,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 6,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "addmri1",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "swid1"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 322,
+            "column" : 15,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "qtimedelta1"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 324,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.qtimedelta1,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "deqlen1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["queueing_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 325,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.deqlen1,queueing_metadata.deq_qdepth)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["mri", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 326,
+            "column" : 4,
+            "source_fragment" : "add_to_field(mri.count,+1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "addmri2",
+      "id" : 8,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "swid2"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 335,
+            "column" : 15,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "qtimedelta2"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 337,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.qtimedelta2,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "deqlen2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["queueing_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 338,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.deqlen2,queueing_metadata.deq_qdepth)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["mri", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 339,
+            "column" : 4,
+            "source_fragment" : "add_to_field(mri.count,+1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "addmri3",
+      "id" : 9,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "swid3"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 348,
+            "column" : 15,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "qtimedelta3"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 350,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.qtimedelta3,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "deqlen3"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["queueing_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 351,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.deqlen3,queueing_metadata.deq_qdepth)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["mri", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 352,
+            "column" : 4,
+            "source_fragment" : "add_to_field(mri.count,+1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "addmri4",
+      "id" : 10,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "swid4"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 361,
+            "column" : 15,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "qtimedelta4"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 363,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.qtimedelta4,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "deqlen4"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["queueing_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 364,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.deqlen4,queueing_metadata.deq_qdepth)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["mri", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 365,
+            "column" : 4,
+            "source_fragment" : "add_to_field(mri.count,+1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "addmri5",
+      "id" : 11,
+      "runtime_data" : [
+        {
+          "name" : "swid",
+          "bitwidth" : 8
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "swid5"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 374,
+            "column" : 15,
+            "source_fragment" : "swid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "qtimedelta5"]
+            },
+            {
+              "type" : "field",
+              "value" : ["queueing_metadata", "deq_timedelta"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 376,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.qtimedelta5,queueing_metadata.deq_timedelta)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "deqlen5"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["queueing_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 377,
+            "column" : 4,
+            "source_fragment" : "modify_field(mri.deqlen5,queueing_metadata.deq_qdepth)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "count"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["mri", "count"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 378,
+            "column" : 4,
+            "source_fragment" : "add_to_field(mri.count,+1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "update_mri",
+      "id" : 12,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["meta", "dstAddr"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 303,
+            "column" : 4,
+            "source_fragment" : "modify_field(ethernet.dstAddr,meta.dstAddr)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "remove_int",
+      "id" : 13,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "mri"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 313,
+            "column" : 4,
+            "source_fragment" : "remove_header(mri)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "NoAction",
+      "id" : 14,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 16,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 17,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "set_routeid",
+      "id" : 18,
+      "runtime_data" : [
+        {
+          "name" : "routeid",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "mri"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 149,
+            "column" : 4,
+            "source_fragment" : "add_header(mri)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["mri", "routeid"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 148,
+            "column" : 19,
+            "source_fragment" : "routeid){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0801"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 151,
+            "column" : 4,
+            "source_fragment" : "modify_field(ethernet.etherType,0x0801)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "checkregister",
+      "id" : 19,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "register_tmp"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "my_register"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 242,
+            "column" : 4,
+            "source_fragment" : "register_read(meta.register_tmp,my_register,0)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "register_tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "-",
+                          "left" : {
+                            "type" : "field",
+                            "value" : ["intrinsic_metadata", "ingress_global_timestamp"]
+                          },
+                          "right" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "&",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["meta", "register_tmp"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xffffffffffff"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xffffffffffff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 243,
+            "column" : 4,
+            "source_fragment" : "modify_field(meta.register_tmp,intrinsic_metadata.ingress_global_timestamp-meta.register_tmp)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "c2c",
+      "id" : 20,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["meta", "dstAddr"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "dstAddr"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 253,
+            "column" : 4,
+            "source_fragment" : "modify_field(meta.dstAddr,ethernet.dstAddr)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "dstAddr"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "op" : "clone_ingress_pkt_to_egress",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x00000001"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ]
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["intrinsic_metadata", "ingress_global_timestamp"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "my_register"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 255,
+            "column" : 4,
+            "source_fragment" : "register_write(my_register,0,intrinsic_metadata.ingress_global_timestamp)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "ipv4_fwd",
+      "id" : 21,
+      "runtime_data" : [
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 211,
+            "column" : 16,
+            "source_fragment" : "port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 213,
+            "column" : 4,
+            "source_fragment" : "modify_field(ipv4.ttl,ipv4.ttl-1)"
+          }
+        },
+        {
+          "op" : "count",
+          "parameters" : [
+            {
+              "type" : "counter_array",
+              "value" : "my_counter"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 214,
+            "column" : 4,
+            "source_fragment" : "count(my_counter,0)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "fwd2host",
+      "id" : 22,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 217,
+            "column" : 24,
+            "source_fragment" : "port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 217,
+            "column" : 16,
+            "source_fragment" : "dstAddr,port){ ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0800"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 220,
+            "column" : 4,
+            "source_fragment" : "modify_field(ethernet.etherType,0x0800)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 221,
+            "column" : 4,
+            "source_fragment" : "modify_field(ipv4.ttl,ipv4.ttl-1)"
+          }
+        },
+        {
+          "op" : "count",
+          "parameters" : [
+            {
+              "type" : "counter_array",
+              "value" : "my_counter"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 222,
+            "column" : 4,
+            "source_fragment" : "count(my_counter,0)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "my_drop",
+      "id" : 23,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 196,
+            "column" : 4,
+            "source_fragment" : "drop()"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "init_table" : "node_2",
+      "tables" : [
+        {
+          "name" : "add_mri",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 155,
+            "column" : 0,
+            "source_fragment" : "table add_mri{ ..."
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "indirect_ws",
+          "action_profile" : "set_routeid_profile",
+          "max_size" : 100,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [18, 14],
+          "actions" : ["set_routeid", "NoAction"],
+          "base_default_next" : "routeid_fwd",
+          "next_tables" : {
+            "set_routeid" : "routeid_fwd",
+            "NoAction" : "routeid_fwd"
+          }
+        },
+        {
+          "name" : "routeid_fwd",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 200,
+            "column" : 0,
+            "source_fragment" : "table routeid_fwd{ ..."
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "mri.routeid",
+              "target" : ["mri", "routeid"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [21, 22, 23, 17],
+          "actions" : ["ipv4_fwd", "fwd2host", "my_drop", "NoAction"],
+          "base_default_next" : "node_5",
+          "next_tables" : {
+            "ipv4_fwd" : "node_5",
+            "fwd2host" : "node_5",
+            "my_drop" : "node_5",
+            "NoAction" : "node_5"
+          },
+          "default_entry" : {
+            "action_id" : 17,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "check_register",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 235,
+            "column" : 0,
+            "source_fragment" : "table check_register{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [19, 15],
+          "actions" : ["checkregister", "NoAction"],
+          "base_default_next" : "node_7",
+          "next_tables" : {
+            "checkregister" : "node_7",
+            "NoAction" : "node_7"
+          },
+          "default_entry" : {
+            "action_id" : 15,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "clone_to_controller",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 246,
+            "column" : 0,
+            "source_fragment" : "table clone_to_controller{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [20, 16],
+          "actions" : ["c2c", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "c2c" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 16,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [
+        {
+          "name" : "set_routeid_profile",
+          "id" : 0,
+          "max_size" : 5,
+          "selector" : {
+            "algo" : "crc16",
+            "input" : [
+              {
+                "type" : "field",
+                "value" : ["ipv4", "srcAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "dstAddr"]
+              },
+              {
+                "type" : "field",
+                "value" : ["ipv4", "protocol"]
+              }
+            ]
+          }
+        }
+      ],
+      "conditionals" : [
+        {
+          "name" : "node_2",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 260,
+            "column" : 19,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["meta", "routeid"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x0000"
+              }
+            }
+          },
+          "true_next" : "add_mri",
+          "false_next" : "routeid_fwd"
+        },
+        {
+          "name" : "node_5",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 264,
+            "column" : 21,
+            "source_fragment" : "||"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "or",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["mri", "count"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x04"
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "etherType"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x0800"
+                  }
+                }
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "check_register"
+        },
+        {
+          "name" : "node_7",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 266,
+            "column" : 26,
+            "source_fragment" : ">="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : ">=",
+              "left" : {
+                "type" : "field",
+                "value" : ["meta", "register_tmp"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x000f4240"
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "clone_to_controller"
+        }
+      ]
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "init_table" : "node_11",
+      "tables" : [
+        {
+          "name" : "add_mri5",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 368,
+            "column" : 0,
+            "source_fragment" : "table add_mri5{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [11, 4],
+          "actions" : ["addmri5", "NoAction"],
+          "base_default_next" : "node_13",
+          "next_tables" : {
+            "addmri5" : "node_13",
+            "NoAction" : "node_13"
+          },
+          "default_entry" : {
+            "action_id" : 4,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "add_mri4",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 355,
+            "column" : 0,
+            "source_fragment" : "table add_mri4{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10, 3],
+          "actions" : ["addmri4", "NoAction"],
+          "base_default_next" : "node_15",
+          "next_tables" : {
+            "addmri4" : "node_15",
+            "NoAction" : "node_15"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "add_mri3",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 342,
+            "column" : 0,
+            "source_fragment" : "table add_mri3{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [9, 2],
+          "actions" : ["addmri3", "NoAction"],
+          "base_default_next" : "node_17",
+          "next_tables" : {
+            "addmri3" : "node_17",
+            "NoAction" : "node_17"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "add_mri2",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 329,
+            "column" : 0,
+            "source_fragment" : "table add_mri2{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [8, 1],
+          "actions" : ["addmri2", "NoAction"],
+          "base_default_next" : "node_19",
+          "next_tables" : {
+            "addmri2" : "node_19",
+            "NoAction" : "node_19"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "add_mri1",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 316,
+            "column" : 0,
+            "source_fragment" : "table add_mri1{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 0],
+          "actions" : ["addmri1", "NoAction"],
+          "base_default_next" : "node_21",
+          "next_tables" : {
+            "addmri1" : "node_21",
+            "NoAction" : "node_21"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "remove_int_t",
+          "id" : 9,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 306,
+            "column" : 0,
+            "source_fragment" : "table remove_int_t{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [13, 6],
+          "actions" : ["remove_int", "NoAction"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "remove_int" : "node_23",
+            "NoAction" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 6,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "mirror",
+          "id" : 10,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 296,
+            "column" : 0,
+            "source_fragment" : "table mirror{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [12, 5],
+          "actions" : ["update_mri", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "update_mri" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 5,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_11",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 273,
+            "column" : 16,
+            "source_fragment" : ">="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : ">=",
+              "left" : {
+                "type" : "field",
+                "value" : ["mri", "count"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x04"
+              }
+            }
+          },
+          "true_next" : "add_mri5",
+          "false_next" : "node_13"
+        },
+        {
+          "name" : "node_13",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 276,
+            "column" : 16,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["mri", "count"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x03"
+              }
+            }
+          },
+          "true_next" : "add_mri4",
+          "false_next" : "node_15"
+        },
+        {
+          "name" : "node_15",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 279,
+            "column" : 16,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["mri", "count"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x02"
+              }
+            }
+          },
+          "true_next" : "add_mri3",
+          "false_next" : "node_17"
+        },
+        {
+          "name" : "node_17",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 282,
+            "column" : 16,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["mri", "count"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x01"
+              }
+            }
+          },
+          "true_next" : "add_mri2",
+          "false_next" : "node_19"
+        },
+        {
+          "name" : "node_19",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 285,
+            "column" : 16,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["mri", "count"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00"
+              }
+            }
+          },
+          "true_next" : "add_mri1",
+          "false_next" : "node_21"
+        },
+        {
+          "name" : "node_21",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 288,
+            "column" : 44,
+            "source_fragment" : "&&"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "and",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "instance_type"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x00000000"
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ethernet", "etherType"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x0800"
+                  }
+                }
+              }
+            }
+          },
+          "true_next" : "remove_int_t",
+          "false_next" : "node_23"
+        },
+        {
+          "name" : "node_23",
+          "id" : 9,
+          "source_info" : {
+            "filename" : "int-ai.p4",
+            "line" : 291,
+            "column" : 38,
+            "source_fragment" : "=="
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["standard_metadata", "instance_type"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000002"
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "mirror"
+        }
+      ]
+    }
+  ],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc",
+      "if_cond" : {
+        "type" : "bool",
+        "value" : true
+      }
+    },
+    {
+      "name" : "cksum_0",
+      "id" : 1,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc_0",
+      "if_cond" : {
+        "type" : "bool",
+        "value" : true
+      }
+    }
+  ],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : []
+}
