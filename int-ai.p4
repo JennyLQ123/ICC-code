@@ -365,7 +365,7 @@ control ingress{
       		apply(create_flow_header);
           apply(check_register);
           if(meta.register_tmp>=1000000){
-              apply(add_first_int);
+              apply(sample_flag);
           }
     	}
     	apply(routeid_fwd);
@@ -376,7 +376,7 @@ control ingress{
 
 control egress{
   if(flow_header.protocol==0x01){
-    apply(add_else_int);
+    apply(add_load_info);
   }
 	if((standard_metadata.instance_type==0) && (ethernet.etherType==0x800)){
 		apply(remove_additional_header);
@@ -395,29 +395,25 @@ action updt_flg(){
   modify_field(ethernet.etherType,0x0801);
 }
 
-table add_first_int{
+table sample_flag{
 	actions{
-		ad_f_int;
+		set_flag;
 	}
 	size:1;
 }
 
-table add_else_int{
+table add_load_info{
   actions{
-    ad_e_int;
+    add_l;
   }
   size:1;
 }
 
-action ad_f_int(swid){
-	add_header(int[0]);
-	add_to_field(flow_header.count,+1);
-	modify_field(int[0].swid,swid);
+action set_flag(){
   modify_field(flow_header.protocol,0x01);
-	modify_field(int[0].qdepth,queueing_metadata.deq_qdepth);
 }
 
-action ad_e_int(swid){
+action add_l(swid){
 	push(int,1);
 	modify_field(int[0].swid,swid);
 	add_to_field(flow_header.count,+1);
