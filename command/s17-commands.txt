@@ -3,4 +3,5 @@ table_add routeid_fwd my_drop 0 =>
 table_set_default update_clone_flag updt_flg
 table_set_default remove_additional_header rmv_header
 table_set_default clone_to_controller c2c
+table_set_default sample_flag set_flag
 table_set_default check_register checkregister

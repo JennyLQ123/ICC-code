@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import random
 
-with open("flow_load","r") as f:
+with open("packet_load","r") as f:
     a=[float(x) for x in f.read().strip().split(" ")]
-with open("res_single","r") as f:
+with open("packet_load_static","r") as f:
     b=[float(x) for x in f.read().strip().split(" ")]
 with open("res_ecmp","r") as f:
     c=[float(x) for x in f.read().strip().split(" ")]
@@ -24,13 +24,17 @@ def extend_func(x,length):
 extend_func(b,len(a))
 extend_func(c,len(a))
 extend_func(d,len(a))
-
+def normallization(a,b):
+	return [a[i]/b[i] for i in range(len(a))]
+a=normallization(a,b)
+b=normallization(b,b)
 x=[i for i in range(len(a))]
 plt.plot(x,a,color="red",label="PPO",linewidth=2)
-#plt.plot(x,b,color="blue",label="SP",linewidth=2)
+plt.plot(x,b,color="blue",label="STATIC",linewidth=2)
 #plt.plot(x,c,color="yellow",label="ECMP",linewidth=2)
 #plt.plot(x,d,color="black",label="LINEAR",linewidth=2)
 plt.xlabel("episode")
 plt.legend(loc="best")
 plt.ylabel("reward")
 plt.show()
+#print x,a

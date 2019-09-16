@@ -389,7 +389,8 @@ def select_single_SP(sp,a):
     for p in paths:
         mt=0
         for i in range(len(p)-1):
-            mt+=a[E2I[str(p[i]).zfill(2)+"-"+str(p[i+1]).zfill(2)]]
+            mt+=1
+		#mt+=a[E2I[str(p[i]).zfill(2)+"-"+str(p[i+1]).zfill(2)]]
         if p==p1:
             cmp1=mt
         if p==p2:
@@ -487,27 +488,27 @@ def controllerMain(data_info,flag):
             s = s_
             ep_r += r
             print r
-            #update ppo
-            if (t+1) % BATCH == 0 or t == EP_LEN-1:
-                v_s_ = ppo.get_v(s_)
-                discounted_r = []
-                for r in buffer_r[::-1]:
-                    v_s_ = r + GAMMA * v_s_
-                    discounted_r.append(v_s_)
-                discounted_r.reverse()
-                bs, ba, br = np.vstack(buffer_s), np.vstack(buffer_a), np.array(discounted_r)[:, np.newaxis]
-                buffer_s, buffer_a, buffer_r = [], [], []
-                print "update ppo"
-                ppo.update(bs, ba, br)
+#            #update ppo
+#            if (t+1) % BATCH == 0 or t == EP_LEN-1:
+#                v_s_ = ppo.get_v(s_)
+#                discounted_r = []
+#                for r in buffer_r[::-1]:
+#                    v_s_ = r + GAMMA * v_s_
+#                    discounted_r.append(v_s_)
+#                discounted_r.reverse()
+#                bs, ba, br = np.vstack(buffer_s), np.vstack(buffer_a), np.array(discounted_r)[:, np.newaxis]
+#                buffer_s, buffer_a, buffer_r = [], [], []
+#                print "update ppo"
+#                ppo.update(bs, ba, br)
         if ep == 0: all_ep_r.append(ep_r)
         else: all_ep_r.append(all_ep_r[-1]*0.9 + ep_r*0.1)
         print(
             'Ep: %i' % ep,
             "|Ep_r: %i" % ep_r,
             )
-        if (ep%10==0):
-            ppo.save("model_packet/ppo%d"%(ep,))
-        with open("packet_load","w") as f:
+#        if (ep%10==0):
+#            ppo.save("model_packet/ppo%d"%(ep,))
+        with open("packet_load_ecmp_1.2","w") as f:
             f.write(len(all_ep_r)*"%f "%tuple(all_ep_r))
 
 if __name__=="__main__":

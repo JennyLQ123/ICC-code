@@ -1,3 +1,3 @@
-tcpreplay -i s0-trf -K --loop=80000 --pps=210 0.packet &
-tcpreplay -i s16-trf -K --loop=80000 --pps=190 16.packet &
-tcpreplay -i s11-trf -K --loop=80000 --pps=200 11.packet
+tcpreplay -i s0-tin -K --loop=80000 --pps=410 0.packet &
+tcpreplay -i s16-tin -K --loop=80000 --pps=490 16.packet &
+tcpreplay -i s11-tin -K --loop=80000 --pps=400 11.packet
