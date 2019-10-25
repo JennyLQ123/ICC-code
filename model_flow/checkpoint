@@ -1,7 +1,0 @@
-model_checkpoint_path: "ppo200"
-all_model_checkpoint_paths: "ppo150"
-all_model_checkpoint_paths: "ppo160"
-all_model_checkpoint_paths: "ppo170"
-all_model_checkpoint_paths: "ppo180"
-all_model_checkpoint_paths: "ppo190"
-all_model_checkpoint_paths: "ppo200"
