@@ -19,7 +19,7 @@
 - background traffic: bash send.sh
 3. start controller:
 - python ctl-ppo/ecmp/linear/sp.py
-##Notes in running
+## Notes in running
 1. when you are training again the experiment, remember to modify these points:
-	ctl-ppo.py:EP_START, EP_START+1(in function controlMain), the positions of reward and models to put, ppo.load()
-	TrafficGenerator:traffic rates in flowtest.py and saved file names in bin/result.py
+- ctl-ppo.py:EP_START, EP_START+1(in function controlMain), the positions of reward and models to put, ppo.load()
+- TrafficGenerator:traffic rates in flowtest.py and saved file names in bin/result.py
