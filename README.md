@@ -11,14 +11,14 @@
 9. util: the reward for different controllers under different traffic sending rates, only 5 epochs. the ppo model we used is ppo500 in folder model\_flow\_1.2\_reset
 ## Running commands
 1. start dataplane:
-	python run_demo.py -p satellite.p4 -m satellite-topo
+- python run_demo.py -p satellite.p4 -m satellite-topo
 2. send traffic:
-	flow: 	bash changmtu 
-		bash flowtest.sh
-	packet: bash send.sh
-	background traffic: bash send.sh
+- flow: bash changmtu 
+	bash flowtest.sh
+- packet: bash send.sh
+- background traffic: bash send.sh
 3. start controller:
-	python ctl-ppo/ecmp/linear/sp.py
+- python ctl-ppo/ecmp/linear/sp.py
 ##Notes in running
 1. when you are training again the experiment, remember to modify these points:
 	ctl-ppo.py:EP_START, EP_START+1(in function controlMain), the positions of reward and models to put, ppo.load()
